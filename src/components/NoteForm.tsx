@@ -12,17 +12,6 @@ function NoteForm() {
         <form
             onSubmit={async (e) => {
                 e.preventDefault()
-
-                const res = await fetch('/api/notes', {
-                    method: 'POST',
-                    body: JSON.stringify({ title, content }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                const data = await res.json()
-
-                router.refresh()
             }}
         >
             <input
