@@ -1,5 +1,5 @@
 "use client"
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNotes } from '@/context/NoteContext'
 
 function NoteForm() {
@@ -8,7 +8,15 @@ function NoteForm() {
     const titleRef = useRef<HTMLInputElement>(null)
 
     // import the context
-    const { createNote } = useNotes()
+    const { createNote, selectedNote, setSelectedNote } = useNotes()
+
+    // for show the note that you want to edit
+    useEffect(() => {
+        if (selectedNote) {
+            setTitle(selectedNote.title)
+            setContent(selectedNote.content || "")
+        }
+    }, [selectedNote])
 
     return (
         <form
@@ -21,7 +29,7 @@ function NoteForm() {
                 setTitle("")
                 setContent("")
 
-                titleRef.current?.focus()
+                titleRef.current?.focus
             }}
         >
             <input
@@ -39,9 +47,26 @@ function NoteForm() {
                 onChange={(e) => setContent(e.target.value)}
                 value={content}
             ></textarea>
-            <button className="px-5 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                Create note
-            </button>
+            <div className='flex justify-end gap-x-2'>
+                <button className="px-5 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    type='submit'
+                >
+                    Create
+                </button>
+                {/* if there is a selected note? */}
+                {selectedNote && (
+                    <button className="px-5 py-2 text-black bg-slate-400 rounded-md hover:bg-slate-500"
+                        type='button'
+                        onClick={() => {
+                            setSelectedNote(null)
+                            setTitle("")
+                            setContent("")
+                        }}
+                    >
+                        Cancel
+                    </button>
+                )}
+            </div>
         </form>
 
     )
