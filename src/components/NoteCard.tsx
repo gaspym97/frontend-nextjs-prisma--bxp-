@@ -1,16 +1,9 @@
-import { GET } from '@/app/api/notes/route'
-import { Note } from '@/interfaces/interfaces'
+import { Note } from '@prisma/client'
+import { useNotes } from '@/context/NoteContext'
 
 function NoteCard({ note }: { note: Note }) {
 
-    // function to delete each note
-    async function deleteNote(id: string) {
-        const res = await fetch(`http://localhost:3000/api/notes/${id}`, {
-            method: 'DELETE',
-        })
-        const data = await res.json()
-        console.log(data)
-    }
+    const { deleteNote } = useNotes()
 
     return (
         <div key={note.id} className='bg-slate-400 p-4 my-2 flex justify-between'>
@@ -19,7 +12,11 @@ function NoteCard({ note }: { note: Note }) {
                 <p>{note.content}</p>
             </div>
             <div className='flex gap-x-2'>
-                <button onClick={() => deleteNote(note.id)}>Delete</button>
+                <button onClick={async () => {
+                    if (confirm("Are you sure you want to delete this note?")) {
+                        await deleteNote(Number(note.id))
+                    }
+                }}>Delete</button>
                 <button>Edit</button>
             </div>
         </div>
