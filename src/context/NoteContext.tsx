@@ -1,15 +1,15 @@
 "use client"
 import { createContext, useContext, useState } from 'react'
-import { Note } from '@/interfaces/interfaces'
+import { CreateNote, Note } from '@/interfaces/interfaces'
 
 export const NoteContext = createContext<{
-    notes: any[],
+    notes: Note[],
     loadNotes: () => Promise<void>,
-    createNote: (note: Note) => Promise<void>,
+    createNote: (note: CreateNote) => Promise<void>,
 }>({
     notes: [],
     loadNotes: async () => { },
-    createNote: async (note: Note) => { }
+    createNote: async (note: CreateNote) => { }
 })
 
 export const useNotes = () => {
@@ -22,7 +22,7 @@ export const useNotes = () => {
 
 // Provider
 export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
-    const [notes, setNotes] = useState<any[]>([])
+    const [notes, setNotes] = useState<Note[]>([])
 
     async function loadNotes() {
         const res = await fetch("api/notes")
@@ -30,7 +30,7 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
         setNotes(data)
     }
 
-    async function createNote(note: Note) {
+    async function createNote(note: CreateNote) {
         const res = await fetch('/api/notes', {
             method: 'POST',
             body: JSON.stringify(note),
