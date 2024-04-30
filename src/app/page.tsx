@@ -1,10 +1,10 @@
 "use client"
 import NoteForm from '@/components/NoteForm'
-import { NoteContext } from '@/context/NoteContext'
-import { useContext, useEffect } from 'react'
+import { useNotes } from '@/context/NoteContext'
+import { useEffect } from 'react'
 
 function HomePage() {
-  const { notes, loadNotes } = useContext(NoteContext)
+  const { notes, loadNotes } = useNotes()
 
   useEffect(() => {
     loadNotes()

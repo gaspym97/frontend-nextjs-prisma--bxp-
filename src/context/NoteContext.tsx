@@ -1,5 +1,6 @@
 "use client"
-import { createContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
+import { Note } from '@/interfaces/interfaces'
 
 export const NoteContext = createContext<{
     notes: any[],
@@ -11,11 +12,15 @@ export const NoteContext = createContext<{
     createNote: async (note: Note) => { }
 })
 
-interface Note {
-    title: string,
-    content: string
+export const useNotes = () => {
+    const context = useContext(NoteContext)
+    if (!context) {
+        throw new Error('useNotes must be used inside a NotesProvider')
+    }
+    return context
 }
 
+// Provider
 export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
     const [notes, setNotes] = useState<any[]>([])
 
