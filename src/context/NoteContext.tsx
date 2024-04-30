@@ -5,11 +5,15 @@ import { Note } from '@prisma/client'
 
 export const NoteContext = createContext<{
     notes: Note[],
+    selectedNote: Note | null,
+    setSelectedNote: (note: Note | null) => void,
     loadNotes: () => Promise<void>,
     createNote: (note: CreateNote) => Promise<void>,
     deleteNote: (id: number) => Promise<void>,
 }>({
     notes: [],
+    selectedNote: null,
+    setSelectedNote: (note: Note | null) => { },
     loadNotes: async () => { },
     createNote: async (note: CreateNote) => { },
     deleteNote: async (id: number) => { }
@@ -26,6 +30,7 @@ export const useNotes = () => {
 // Provider
 export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
     const [notes, setNotes] = useState<Note[]>([])
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null)
 
     async function loadNotes() {
         const res = await fetch("api/notes")
@@ -57,7 +62,7 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <NoteContext.Provider value={{ notes, loadNotes, createNote, deleteNote }}>
+        <NoteContext.Provider value={{ notes, selectedNote, setSelectedNote, loadNotes, createNote, deleteNote }}>
             {children}
         </NoteContext.Provider>
     )
