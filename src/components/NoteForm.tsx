@@ -8,7 +8,7 @@ function NoteForm() {
     const titleRef = useRef<HTMLInputElement>(null)
 
     // import the context
-    const { createNote, selectedNote, setSelectedNote } = useNotes()
+    const { createNote, selectedNote, setSelectedNote, updateNote } = useNotes()
 
     // for show the note that you want to edit
     useEffect(() => {
@@ -25,7 +25,10 @@ function NoteForm() {
 
                 // if selected note exist, then clean the form
                 if (selectedNote) {
-                    console.log("updating")
+                    updateNote(selectedNote.id, {
+                        title,
+                        content
+                    })
                     setSelectedNote(null)
                 } else {
                     await createNote({

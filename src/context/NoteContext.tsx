@@ -1,7 +1,8 @@
 "use client"
 import { createContext, useContext, useState } from 'react'
-import { CreateNote } from '@/interfaces/interfaces'
+import { CreateNote, UpdateNote } from '@/interfaces/interfaces'
 import { Note } from '@prisma/client'
+import { Update } from 'next/dist/build/swc'
 
 export const NoteContext = createContext<{
     notes: Note[],
@@ -10,13 +11,15 @@ export const NoteContext = createContext<{
     loadNotes: () => Promise<void>,
     createNote: (note: CreateNote) => Promise<void>,
     deleteNote: (id: number) => Promise<void>,
+    updateNote: (id: number, note: UpdateNote) => Promise<void>,
 }>({
     notes: [],
     selectedNote: null,
     setSelectedNote: (note: Note | null) => { },
     loadNotes: async () => { },
     createNote: async (note: CreateNote) => { },
-    deleteNote: async (id: number) => { }
+    deleteNote: async (id: number) => { },
+    updateNote: async (id: number, note: UpdateNote) => { }
 })
 
 export const useNotes = () => {
@@ -54,7 +57,7 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     async function deleteNote(id: number) {
-        const res = await fetch(`http://localhost:3000/api/notes/${id}`, {
+        const res = await fetch(`/api/notes/${id}`, {
             method: 'DELETE',
         })
         const data = await res.json()
@@ -63,8 +66,24 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
         setNotes(notes.filter((note) => note.id != id))
     }
 
+    async function updateNote(id: number, note: UpdateNote) {
+        const res = await fetch(`api/notes/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(note),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        setNotes(notes.map(note => note.id === id ? data : note))
+    }
+
     return (
-        <NoteContext.Provider value={{ notes, selectedNote, setSelectedNote, loadNotes, createNote, deleteNote }}>
+        <NoteContext.Provider
+            value={{
+                notes, selectedNote, setSelectedNote, loadNotes, createNote, deleteNote, updateNote
+            }}
+        >
             {children}
         </NoteContext.Provider>
     )
