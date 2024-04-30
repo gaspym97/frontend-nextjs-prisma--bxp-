@@ -30,6 +30,8 @@ export const useNotes = () => {
 // Provider
 export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
     const [notes, setNotes] = useState<Note[]>([])
+    // if you click on the edit button, this selectedNote
+    // is stored with the note you want to edit
     const [selectedNote, setSelectedNote] = useState<Note | null>(null)
 
     async function loadNotes() {

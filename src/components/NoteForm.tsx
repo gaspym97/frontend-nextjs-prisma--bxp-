@@ -22,10 +22,17 @@ function NoteForm() {
         <form
             onSubmit={async (e) => {
                 e.preventDefault()
-                await createNote({
-                    title,
-                    content
-                })
+
+                // if selected note exist, then clean the form
+                if (selectedNote) {
+                    console.log("updating")
+                    setSelectedNote(null)
+                } else {
+                    await createNote({
+                        title,
+                        content
+                    })
+                }
                 setTitle("")
                 setContent("")
 
@@ -51,9 +58,9 @@ function NoteForm() {
                 <button className="px-5 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
                     type='submit'
                 >
-                    Create
+                    {selectedNote ? "Update" : "Create"}
                 </button>
-                {/* if there is a selected note? */}
+                {/* if there is a selected note */}
                 {selectedNote && (
                     <button className="px-5 py-2 text-black bg-slate-400 rounded-md hover:bg-slate-500"
                         type='button'
