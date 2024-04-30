@@ -1,17 +1,22 @@
 "use client"
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useContext, useState } from 'react'
+import { NoteContext } from '@/context/NoteContext'
 
 function NoteForm() {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
 
-    const router = useRouter()
+    const { createNote } = useContext(NoteContext)
 
     return (
         <form
             onSubmit={async (e) => {
                 e.preventDefault()
+
+                await createNote({
+                    title,
+                    content
+                })
             }}
         >
             <input

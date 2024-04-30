@@ -3,10 +3,12 @@ import { createContext, useState } from 'react'
 
 export const NoteContext = createContext<{
     notes: any[],
-    loadNotes: () => Promise<void>
+    loadNotes: () => Promise<void>,
+    createNote: (note: Note) => Promise<void>,
 }>({
     notes: [],
-    loadNotes: async () => { }
+    loadNotes: async () => { },
+    createNote: async (note: Note) => { }
 })
 
 interface Note {
@@ -32,11 +34,12 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
             }
         })
         const newNote = await res.json()
+        console.log(newNote)
         setNotes([...notes, newNote])
     }
 
     return (
-        <NoteContext.Provider value={{ notes, loadNotes }}>
+        <NoteContext.Provider value={{ notes, loadNotes, createNote }}>
             {children}
         </NoteContext.Provider>
     )
