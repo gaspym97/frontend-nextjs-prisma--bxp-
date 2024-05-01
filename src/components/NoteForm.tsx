@@ -58,7 +58,9 @@ function NoteForm() {
                 value={content}
             ></textarea>
             <div className='flex justify-end gap-x-2'>
-                <button className="px-5 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                <button className="px-5 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    // if the user dont type anything in the form, disable the button
+                    disabled={!title || !content}
                     type='submit'
                 >
                     {selectedNote ? "Update" : "Create"}
